@@ -60,7 +60,10 @@ void Manager::run(const char* command_txt){
 		else if (command == "BFS") {
 			char option;
 			int vertex;
-			if (!(iss >> option >> vertex)) {
+			string extra;
+			if (!(iss >> option >> vertex) || (iss >> extra)) {
+				printErrorCode(300);
+			} else if (option != 'O' && option != 'X') {
 				printErrorCode(300);
 			} else if (!mBFS(option, vertex)) {
 				printErrorCode(300);
@@ -69,21 +72,30 @@ void Manager::run(const char* command_txt){
 		else if (command == "DFS") {
 			char option;
 			int vertex;
-			if (!(iss >> option >> vertex)) {
+			string extra;
+			if (!(iss >> option >> vertex) || (iss >> extra)) {
+				printErrorCode(400);
+			} else if (option != 'O' && option != 'X') {
 				printErrorCode(400);
 			} else if (!mDFS(option, vertex)) {
 				printErrorCode(400);
 			}
 		}
 		else if (command == "KRUSKAL") {
-			if (!mKRUSKAL()) {
+			string extra;
+			if (iss >> extra) {
+				printErrorCode(500);
+			} else if (!mKRUSKAL()) {
 				printErrorCode(500);
 			}
 		}
 		else if (command == "DIJKSTRA") {
 			char option;
 			int vertex;
-			if (!(iss >> option >> vertex)) {
+			string extra;
+			if (!(iss >> option >> vertex) || (iss >> extra)) {
+				printErrorCode(600);
+			} else if (option != 'O' && option != 'X') {
 				printErrorCode(600);
 			} else if (!mDIJKSTRA(option, vertex)) {
 				printErrorCode(600);
@@ -92,7 +104,10 @@ void Manager::run(const char* command_txt){
 		else if (command == "BELLMANFORD") {
 			char option;
 			int s_vertex, e_vertex;
-			if (!(iss >> option >> s_vertex >> e_vertex)) {
+			string extra;
+			if (!(iss >> option >> s_vertex >> e_vertex) || (iss >> extra)) {
+				printErrorCode(700);
+			} else if (option != 'O' && option != 'X') {
 				printErrorCode(700);
 			} else if (!mBELLMANFORD(option, s_vertex, e_vertex)) {
 				printErrorCode(700);
@@ -100,14 +115,20 @@ void Manager::run(const char* command_txt){
 		}
 		else if (command == "FLOYD") {
 			char option;
-			if (!(iss >> option)) {
+			string extra;
+			if (!(iss >> option) || (iss >> extra)) {
+				printErrorCode(800);
+			} else if (option != 'O' && option != 'X') {
 				printErrorCode(800);
 			} else if (!mFLOYD(option)) {
 				printErrorCode(800);
 			}
 		}
 		else if (command == "CENTRALITY") {
-			if (!mCentrality()) {
+			string extra;
+			if (iss >> extra) {
+				printErrorCode(900);
+			} else if (!mCentrality()) {
 				printErrorCode(900);
 			}
 		}
@@ -115,7 +136,8 @@ void Manager::run(const char* command_txt){
 			fout << "========EXIT========" << endl;
 			fout << "Success" << endl;
 			fout << "====================" << endl << endl;
-			break;  // Exit program
+			fin.close();
+			return;  // Exit immediately
 		}
 	}
 	
