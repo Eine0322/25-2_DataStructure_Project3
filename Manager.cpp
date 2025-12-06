@@ -9,8 +9,10 @@
 Manager::Manager()	
 {
 	graph = nullptr;	
-	fout.open("log.txt", ios::out);  // Open file in write mode (overwrite existing file)
+	fout.open("log.txt", ios::out | ios::trunc);  // Truncate mode to clear file
 	load = 0;	// Nothing is loaded initially
+	if (fout.is_open())
+		fout.close();  // Close immediately, reopen in run()
 }
 
 Manager::~Manager()
@@ -26,9 +28,13 @@ void Manager::run(const char* command_txt){
 	fin.open(command_txt, ios_base::in);  // Open command file in read mode
 		
 	if(!fin) {  // If command file cannot be opened, print error
+		ofstream fout("log.txt", ios::app);
 		fout << "command file open error" << endl;
+		fout.close();
 		return;	
 	}
+	
+	fout.open("log.txt", ios::app);  // Reopen in append mode
 	
 	string line;
 	// Read and process commands line by line
@@ -136,11 +142,20 @@ void Manager::run(const char* command_txt){
 			fout << "========EXIT========" << endl;
 			fout << "Success" << endl;
 			fout << "====================" << endl << endl;
+			fout.close();  // Close output file
 			fin.close();
+			
+			// Prevent any further algorithm output
+			if (graph) {
+				delete graph;
+				graph = nullptr;
+				load = 0;
+			}
 			return;  // Exit immediately
 		}
 	}
 	
+	fout.close();  // Close at end
 	fin.close();
 	return;
 }
